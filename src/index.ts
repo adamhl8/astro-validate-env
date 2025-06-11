@@ -41,18 +41,16 @@ export type Vars = z.infer<typeof varsSchema>
 
 const optionsSchema = z
   .object({
-    /** The path to your server entry hook file, relative to the `src` directory @default "server-entry-hook.ts" */
-    hookFilePath: z.string().default("server-entry-hook.ts"),
     /** The path to your server entry file, relative to the `dist/server` directory @default "entry.mjs" */
     entryFilePath: z.string().default("entry.mjs"),
     vars: varsSchema,
   })
   .default({})
 
-type Options = z.input<typeof optionsSchema>
+type OptionsInput = z.input<typeof optionsSchema>
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-export default function integration(options: Options): AstroIntegration {
+export default function integration(options?: OptionsInput): AstroIntegration {
   const opts = optionsSchema.parse(options)
 
   return {
