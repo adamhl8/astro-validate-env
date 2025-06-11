@@ -1,0 +1,52 @@
+{
+  "name": "astro-validate-env",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A environment variable validation integration for Astro",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adamhl8/astro-validate-env"
+  },
+  "homepage": "https://github.com/adamhl8/astro-validate-env",
+  "bugs": {
+    "url": "https://github.com/adamhl8/astro-validate-env/issues"
+  },
+  "author": {
+    "email": "adamhl@pm.me",
+    "name": "Adam Langbert",
+    "url": "https://github.com/adamhl8"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "astro-component",
+    "withastro",
+    "environment variables",
+    "env"
+  ],
+  "scripts": {
+    "bundle": "bun lint && rm -rf dist && tsc -p ./tsconfig.build.json",
+    "lint": "tsc --noEmit && prettier --write . && eslint ."
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.15",
+    "eslint": "^9.28.0",
+    "eslint-config-builder": "^0.21.1",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.34.0"
+  }
+}

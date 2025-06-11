@@ -1,0 +1,14 @@
+{
+  "extends": "./node_modules/eslint-config-builder/dist/tsconfig.json",
+  "exclude": ["dist/"],
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "./dist"
+  }
+}
