@@ -13,14 +13,14 @@ An alternative to Astro's built-in environment variable validation. This integra
 
 ## Quickstart
 
-- Add the integration:
+Add the integration:
 
 ```sh
 npx astro add astro-validate-env
 # or bun, pnpm, yarn
 ```
 
-- Define your environment variables:
+Define your environment variables:
 
 ```ts
 // astro.config.*
