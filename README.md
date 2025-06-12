@@ -73,6 +73,9 @@ For Node, you can use something like [dotenvx](https://github.com/dotenvx/dotenv
 
 ## Installation
 
+> [!TIP]
+> I recommend putting the `validateEnv` first in the list of integrations.
+
 ```sh
 npx astro add astro-validate-env
 # or bun, pnpm, yarn
@@ -107,6 +110,7 @@ import { defineConfig } from "astro/config"
 export default defineConfig({
   integrations: [
     validateEnv({
+      entryFilePath: "entry.mjs", // (default: "entry.mjs") The path to your server entry file, relative to the `dist/server` directory. Only relevant when using a server adapter/SSR
       vars: {
         MY_VAR: {
           context: ["dev", "build", "server"], // (default: ["dev", "build", "server"]) The context(s) where the variable is needed
@@ -140,6 +144,13 @@ In your code, access your environment variables via `process.env`.
 A `process.env.d.ts` file is automatically generated for you based on your configuration. This allows you to get intellisense/autocomplete for your environment variables when accessing the `process.env` object.
 
 - Environment variables marked as `optional` are always typed as optional (`?`) properties. In other words, they may be `undefined`.
+
+> [!WARNING]
+> It is possible for non-optional environment variables to be `undefined`. For example, say you have environment variable `MY_BUILD_VAR` that you only need in the `build` context. And you set `optional: false` so it will be typed as `string` (no `undefined`).
+>
+> Let's say `MY_BUILD_VAR` is _only_ provided during build (e.g. `MY_BUILD_VAR=1 astro build`). If you try to access `MY_BUILD_VAR` during `astro dev`, it will be `undefined` despite being typed as `string`.
+>
+> In other words, **make sure you include the appropriate context(s) for each environment variable**. In this example, if you added the `dev` context, the missing variable would be caught.
 
 Now whenever you run `astro dev` or `astro build`, the integration will validate your environment variables based on the provided configuration. If any environment variables are missing or invalid, you will receive a helpful error message.
 

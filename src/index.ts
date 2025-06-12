@@ -96,10 +96,13 @@ export default function integration(options?: Options): AstroIntegration {
   return {
     name: "astro-validate-env",
     hooks: {
-      "astro:config:setup": async ({ command, logger }) => {
-        if (command === "sync") await generateProcessEnvDeclaration(opts.vars)
-        else if (command === "dev" || command === "build") {
-          await generateProcessEnvDeclaration(opts.vars)
+      "astro:config:setup": async ({ command, logger, isRestart }) => {
+        if (isRestart) return
+
+        if (command === "sync") {
+          await generateProcessEnvDeclaration(opts.vars, logger)
+        } else if (command === "dev" || command === "build") {
+          await generateProcessEnvDeclaration(opts.vars, logger)
           validateEnv(opts.vars, command, logger)
         }
       },

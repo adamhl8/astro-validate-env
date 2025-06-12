@@ -11,12 +11,23 @@ interface InvalidVar {
 
 const getCharacterString = (value: number) => (value === 1 ? "character" : "characters")
 
+const isNativeConsole = (logger: typeof console | AstroIntegrationLogger): logger is typeof console =>
+  logger === console
+
+const getTimeString = () => {
+  const timeString = new Date().toTimeString()
+  return timeString.split(" ")[0] ?? timeString
+}
+
 // eslint-disable-next-line sonarjs/cognitive-complexity, jsdoc/require-jsdoc
 export function validateEnv(
   vars: Vars,
   astroContext: "dev" | "build" | "server",
   logger: typeof console | AstroIntegrationLogger,
 ) {
+  // In the server context, we use 'console' instead of the astro-provided logger. So we need to prepend the timestamp and integration name to keep things consistent.
+  const getLogPrefix = () => (isNativeConsole(logger) ? `${getTimeString()} [astro-validate-env] ` : "")
+
   const invalidVars: InvalidVar[] = []
 
   for (const [key, varConfig] of Object.entries(vars)) {
@@ -76,7 +87,7 @@ export function validateEnv(
   }
 
   if (invalidVars.length > 0) {
-    logger.error("The following environment variables are invalid:\n")
+    logger.error(`${getLogPrefix()}The following environment variables are invalid:\n`)
     for (const invalidVar of invalidVars) {
       // we don't want to show anything for undefined or empty string
       let valueString: string
@@ -89,5 +100,5 @@ export function validateEnv(
     }
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1)
-  }
+  } else logger.info(`${getLogPrefix()}All configured environment variables are valid`)
 }
