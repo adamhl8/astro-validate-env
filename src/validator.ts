@@ -89,7 +89,6 @@ export function validateEnv(
   if (invalidVars.length > 0) {
     logger.error(`${getLogPrefix()}The following environment variables are invalid:\n`)
     for (const invalidVar of invalidVars) {
-      // we don't want to show anything for undefined or empty string
       let valueString: string
       if (invalidVar.value === undefined) valueString = ""
       else if (invalidVar.value === "") valueString = '=""'

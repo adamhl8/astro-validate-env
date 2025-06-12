@@ -169,6 +169,6 @@ import avefs from "node:fs"
 
 import { validateEnv as aveValidateEnv } from "./astro-validate-env.mjs" // a copy of `src/validator.ts`
 
-const vars = avefs.readFileSync(`${import.meta.dirname}/astro-validate-env.json`) // a serialized version of your `validateEnv` configuration
-aveValidateEnv(JSON.parse(vars), "server", console)
+const aveVars = avefs.readFileSync(`${import.meta.dirname}/astro-validate-env.json`) // a serialized version of your `validateEnv` configuration
+aveValidateEnv(JSON.parse(aveVars), "server", console)
 ```

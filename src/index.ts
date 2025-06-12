@@ -120,8 +120,8 @@ export default function integration(options?: Options): AstroIntegration {
         const entryFileCode = `
 import avefs from "node:fs"
 import { validateEnv as aveValidateEnv } from "./astro-validate-env.mjs"
-const vars = avefs.readFileSync(\`\${import.meta.dirname}/astro-validate-env.json\`)
-aveValidateEnv(JSON.parse(vars), "server", console)
+const aveVars = avefs.readFileSync(\`\${import.meta.dirname}/astro-validate-env.json\`)
+aveValidateEnv(JSON.parse(aveVars), "server", console)
 `.trim()
 
         await fs.writeFile(entryFilePath, `${entryFileCode}\n${entryFileContent}`)
