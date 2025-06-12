@@ -6,32 +6,75 @@ import z from "astro/zod"
 import { generateProcessEnvDeclaration } from "./process-env-gen.js"
 import { validateEnv } from "./validator.js"
 
+type Options =
+  | {
+      /**
+       * The path to your server entry file, relative to the `dist/server` directory.
+       *
+       * Only relevant when using a server adapter/SSR
+       *
+       * @default "entry.mjs"
+       */
+      entryFilePath?: string | undefined
+      /**
+       * A mapping of environment variable keys to their config
+       *
+       * @example
+       * ```ts
+       * vars: {
+       *   MY_VAR: {
+       *     context: ["dev", "build", "server"],
+       *     // ...
+       *   },
+       * }
+       * ```
+       */
+      vars?:
+        | Record<
+            string,
+            {
+              /** The context(s) where the variable is needed @default ["dev", "build", "server"] */
+              context?: ("dev" | "build" | "server")[] | undefined
+              /** If `true`, no error will be thrown if the environment variable is missing @default false */
+              optional?: boolean | undefined
+              /** If `true`, the environment variable value will never be printed in log output @default false */
+              secret?: boolean | undefined
+              /** The environment variable must exactly match the given value (or if an array, one of the given values) */
+              exactly?: string | string[] | undefined
+              /** The environment variable must start with the given value */
+              startsWith?: string | undefined
+              /** The environment variable must end with the given value */
+              endsWith?: string | undefined
+              /** The environment variable must include the given value */
+              includes?: string | undefined
+              /** The environment variable must have the given length */
+              length?: number | undefined
+              /** The environment variable must be at least the given length */
+              min?: number | undefined
+              /** The environment variable must be at most the given length */
+              max?: number | undefined
+              /** The environment variable must be a valid URL */
+              url?: boolean | undefined
+            }
+          >
+        | undefined
+    }
+  | undefined
+
 const varsSchema = z
-  /** A mapping of environment variable keys to their config */
   .record(
     z.string(),
     z.object({
-      /** The context(s) where the variable is needed @default ["dev", "build", "server"] */
       context: z.enum(["dev", "build", "server"]).array().default(["dev", "build", "server"]),
-      /** If `true`, no error will be thrown if the environment variable is missing @default false */
       optional: z.boolean().default(false),
-      /** If `true`, the environment variable will not be printed if it's invalid @default false */
       secret: z.boolean().default(false),
-      /** The environment variable must exactly match the given value (or if an array, one of the given values) */
       exactly: z.string().optional().or(z.array(z.string()).optional()),
-      /** The environment variable must start with the given value */
       startsWith: z.string().optional(),
-      /** The environment variable must end with the given value */
       endsWith: z.string().optional(),
-      /** The environment variable must include the given value */
       includes: z.string().optional(),
-      /** The environment variable must have the given length */
       length: z.number().optional(),
-      /** The environment variable must be at least the given length */
       min: z.number().default(1),
-      /** The environment variable must be at most the given length */
       max: z.number().optional(),
-      /** The environment variable must be a valid URL */
       url: z.boolean().optional(),
     }),
   )
@@ -41,16 +84,13 @@ export type Vars = z.infer<typeof varsSchema>
 
 const optionsSchema = z
   .object({
-    /** The path to your server entry file, relative to the `dist/server` directory @default "entry.mjs" */
     entryFilePath: z.string().default("entry.mjs"),
     vars: varsSchema,
   })
-  .default({})
-
-type OptionsInput = z.input<typeof optionsSchema>
+  .default({}) satisfies z.ZodType<Options>
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-export default function integration(options?: OptionsInput): AstroIntegration {
+export default function integration(options?: Options): AstroIntegration {
   const opts = optionsSchema.parse(options)
 
   return {
