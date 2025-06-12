@@ -9,8 +9,6 @@ An alternative to Astro's built-in environment variable validation. This integra
 - 🎯 Allows you to enforce each environment variable only in the contexts you choose (dev vs. build vs. server)
 - ✨ Automatically generates type definitions for your environment variables (no more checking for `undefined`!)
 
----
-
 ## Quickstart
 
 Add the integration:
@@ -74,14 +72,14 @@ For Node, you can use something like [dotenvx](https://github.com/dotenvx/dotenv
 ## Installation
 
 > [!TIP]
-> I recommend putting the `validateEnv` first in the list of integrations.
+> I recommend putting the `validateEnv` integration first in the list so environment variables are validated before anything else runs.
 
 ```sh
 npx astro add astro-validate-env
 # or bun, pnpm, yarn
 ```
 
-**Or**, install it manually:
+Manual installation:
 
 ```sh
 npm install astro-validate-env
