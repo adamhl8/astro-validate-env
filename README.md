@@ -158,6 +158,9 @@ To allow for validation when using a server adapter/SSR, this integration automa
 
 - If your entry file has a different name/path, use the `entryFilePath` option.
 
+> [!IMPORTANT]
+> If this integration does not work with your server adapter, please open an issue.
+
 The injected code looks exactly like this:
 
 ```js
