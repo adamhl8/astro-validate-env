@@ -79,7 +79,8 @@ npx astro add astro-validate-env
 # or bun, pnpm, yarn
 ```
 
-Manual installation:
+<details>
+<summary>Manual installation</summary>
 
 ```sh
 npm install astro-validate-env
@@ -95,6 +96,8 @@ export default defineConfig({
   integrations: [validateEnv()],
 })
 ```
+
+</details>
 
 ## Usage
 
