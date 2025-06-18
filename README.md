@@ -140,9 +140,7 @@ export default defineConfig({
   - `context`: `["dev", "build", "server"]`
   - `min`: `1` (Empty strings are considered invalid)
 
-In your code, access your environment variables via `process.env`.
-
-A `process.env.d.ts` file is automatically generated for you based on your configuration. This allows you to get intellisense/autocomplete for your environment variables when accessing the `process.env` object.
+A `import.meta.env.d.ts` file is automatically generated for you based on your configuration. This allows you to get intellisense/autocomplete for your environment variables when accessing the `import.meta.env` object.
 
 - Environment variables marked as `optional` are always typed as optional (`?`) properties. In other words, they may be `undefined`.
 

@@ -3,7 +3,7 @@ import path from "node:path"
 import type { AstroIntegration } from "astro"
 import z from "astro/zod"
 
-import { generateProcessEnvDeclaration } from "./process-env-gen.js"
+import { generateEnvDeclaration } from "./env-d-gen.js"
 import { validateEnv } from "./validator.js"
 
 type Options =
@@ -100,9 +100,9 @@ export default function integration(options?: Options): AstroIntegration {
         if (isRestart) return
 
         if (command === "sync") {
-          await generateProcessEnvDeclaration(opts.vars, logger)
+          await generateEnvDeclaration(opts.vars, logger)
         } else if (command === "dev" || command === "build") {
-          await generateProcessEnvDeclaration(opts.vars, logger)
+          await generateEnvDeclaration(opts.vars, logger)
           validateEnv(opts.vars, command, logger)
         }
       },
