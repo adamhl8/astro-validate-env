@@ -157,8 +157,6 @@ Now whenever you run `astro dev` or `astro build`, the integration will validate
 
 To allow for validation when using a server adapter/SSR, this integration automatically injects some code into the top of your server entry file. This entry file is usually `dist/server/entry.mjs`.
 
-- If your entry file has a different name/path, use the `entryFilePath` option.
-
 > [!IMPORTANT]
 > If this integration does not work with your server adapter, please open an issue.
 
