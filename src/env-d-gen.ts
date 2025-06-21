@@ -1,10 +1,15 @@
 import fs from "node:fs/promises"
+import path from "node:path"
 import type { AstroIntegrationLogger } from "astro"
 
 import type { Vars } from "./index.js"
 
 // eslint-disable-next-line jsdoc/require-jsdoc
-export async function generateEnvDeclaration(vars: Vars, logger: AstroIntegrationLogger) {
+export async function generateEnvDeclaration(
+  vars: Vars,
+  envDeclarationFilePath: string,
+  logger: AstroIntegrationLogger,
+) {
   const lines: string[] = []
   for (const [key, varConfig] of Object.entries(vars)) {
     if (varConfig.optional) lines.push(`  readonly ${key}?: string`)
@@ -21,7 +26,8 @@ interface ImportMeta {
 }
 `.trimStart()
 
-  await fs.writeFile("import.meta.env.d.ts", envDeclartion)
+  await fs.mkdir(path.dirname(envDeclarationFilePath), { recursive: true })
+  await fs.writeFile(envDeclarationFilePath, envDeclartion)
 
-  logger.info("Generated 'import.meta.env.d.ts'")
+  logger.info(`Generated '${envDeclarationFilePath}'`)
 }

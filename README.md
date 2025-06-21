@@ -111,7 +111,7 @@ import { defineConfig } from "astro/config"
 export default defineConfig({
   integrations: [
     validateEnv({
-      entryFilePath: "entry.mjs", // (default: "entry.mjs") The path to your server entry file, relative to the `dist/server` directory. Only relevant when using a server adapter/SSR
+      envDeclarationFilePath: "import.meta.env.d.ts", // (default: "import.meta.env.d.ts") The path the `import.meta.env` declaration file will be written to, relative to the project root
       vars: {
         MY_VAR: {
           context: ["dev", "build", "server"], // (default: ["dev", "build", "server"]) The context(s) where the variable is needed

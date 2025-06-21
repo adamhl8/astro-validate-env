@@ -9,6 +9,12 @@ import { validateEnv } from "./validator.js"
 type Options =
   | {
       /**
+       * The path the `import.meta.env` declaration file will be written to, relative to the project root
+       *
+       * @default "import.meta.env.d.ts"
+       */
+      envDeclarationFilePath?: string | undefined
+      /**
        * A mapping of environment variable keys to their config
        *
        * @example
@@ -76,6 +82,7 @@ export type Vars = z.infer<typeof varsSchema>
 
 const optionsSchema = z
   .object({
+    envDeclarationFilePath: z.string().default("import.meta.env.d.ts"),
     vars: varsSchema,
   })
   .default({}) satisfies z.ZodType<Options>
@@ -94,9 +101,9 @@ export default function integration(options?: Options): AstroIntegration {
         if (isRestart) return
 
         if (command === "sync") {
-          await generateEnvDeclaration(opts.vars, logger)
+          await generateEnvDeclaration(opts.vars, opts.envDeclarationFilePath, logger)
         } else if (command === "dev" || command === "build") {
-          await generateEnvDeclaration(opts.vars, logger)
+          await generateEnvDeclaration(opts.vars, opts.envDeclarationFilePath, logger)
           validateEnv(opts.vars, command, logger)
         }
       },
