@@ -9,14 +9,6 @@ import { validateEnv } from "./validator.js"
 type Options =
   | {
       /**
-       * The path to your server entry file, relative to the `dist/server` directory.
-       *
-       * Only relevant when using a server adapter/SSR
-       *
-       * @default "entry.mjs"
-       */
-      entryFilePath?: string | undefined
-      /**
        * A mapping of environment variable keys to their config
        *
        * @example
@@ -84,19 +76,21 @@ export type Vars = z.infer<typeof varsSchema>
 
 const optionsSchema = z
   .object({
-    entryFilePath: z.string().default("entry.mjs"),
     vars: varsSchema,
   })
   .default({}) satisfies z.ZodType<Options>
 
 // eslint-disable-next-line jsdoc/require-jsdoc
 export default function integration(options?: Options): AstroIntegration {
+  let serverEntry: string
   const opts = optionsSchema.parse(options)
 
   return {
     name: "astro-validate-env",
     hooks: {
-      "astro:config:setup": async ({ command, logger, isRestart }) => {
+      "astro:config:setup": async ({ command, logger, isRestart, config }) => {
+        serverEntry = config.build.serverEntry
+
         if (isRestart) return
 
         if (command === "sync") {
@@ -110,7 +104,7 @@ export default function integration(options?: Options): AstroIntegration {
         logger.info("Adding env validation to server build...")
 
         const serverDirPath = new URL(manifest.buildServerDir).pathname
-        const entryFilePath = `${serverDirPath}${opts.entryFilePath}`
+        const entryFilePath = `${serverDirPath}${serverEntry}`
         const entryFileDirPath = path.dirname(entryFilePath)
         const entryFileContent = await fs.readFile(entryFilePath, { encoding: "utf8" })
 
