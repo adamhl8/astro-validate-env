@@ -59,8 +59,6 @@ Astro's [built-in environment variable validation](https://docs.astro.build/en/g
 - You can't require environment variables only in a certain context (dev vs. build). Any environment variables required during development will also be required during the build.
 - It doesn't validate environment variables on server startup at all.
 
-I needed something that validates environment variables in all contexts and uses the standard `process.env` object.
-
 ## Prerequisites / Notes
 
 This integration does not load `.env` files. Using a package like [dotenv](https://www.npmjs.com/package/dotenv) will not work in most cases because validation is done very early on in the startup process. In other words, environment variables should be loaded _before_ Astro starts.
