@@ -37,7 +37,7 @@
   ],
   "scripts": {
     "bundle": "bun lint && rm -rf dist && tsc -p ./tsconfig.build.json",
-    "lint": "tsc --noEmit && prettier --write . && eslint ."
+    "lint": "tsc --noEmit && biome check --write"
   },
   "peerDependencies": {
     "astro": "^5.0.0"
