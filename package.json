@@ -20,7 +20,7 @@
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/types/index.d.ts"
     }
   },
   "files": [
@@ -43,7 +43,7 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@adamhl8/configs": "^0.3.0",
+    "@adamhl8/configs": "^0.4.0",
     "@biomejs/biome": "^2.0.6",
     "@types/bun": "^1.2.17",
     "typescript": "^5.8.3"

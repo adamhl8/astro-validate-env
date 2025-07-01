@@ -4,7 +4,6 @@ import type { AstroIntegrationLogger } from "astro"
 
 import type { Vars } from "./index.js"
 
-// eslint-disable-next-line jsdoc/require-jsdoc
 export async function generateEnvDeclaration(
   vars: Vars,
   envDeclarationFilePath: string,

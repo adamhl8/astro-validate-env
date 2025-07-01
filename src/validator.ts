@@ -1,3 +1,4 @@
+import process from "node:process"
 import type { AstroIntegrationLogger } from "astro"
 
 import type { Vars } from "./index.js"
@@ -19,7 +20,7 @@ const getTimeString = () => {
   return timeString.split(" ")[0] ?? timeString
 }
 
-// eslint-disable-next-line sonarjs/cognitive-complexity, jsdoc/require-jsdoc
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: ignore
 export function validateEnv(
   vars: Vars,
   astroContext: "dev" | "build" | "server",
@@ -76,10 +77,9 @@ export function validateEnv(
       invalidVar.issues.push(`Expected to be at most ${max.toString()} ${getCharacterString(max)} long`)
     if (url) {
       try {
-        // eslint-disable-next-line no-new
         new URL(value)
       } catch {
-        invalidVar.issues.push(`Expected to be a valid URL`)
+        invalidVar.issues.push("Expected to be a valid URL")
       }
     }
 
@@ -97,7 +97,7 @@ export function validateEnv(
       else valueString = ""
       console.error(`${invalidVar.key}${valueString} -> ${invalidVar.issues.join(", ")}`)
     }
-    // eslint-disable-next-line unicorn/no-process-exit
+
     process.exit(1)
   } else logger.info(`${getLogPrefix()}All configured environment variables are valid`)
 }

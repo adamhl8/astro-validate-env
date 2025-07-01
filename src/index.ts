@@ -87,7 +87,7 @@ const optionsSchema = z
   })
   .default({}) satisfies z.ZodType<Options>
 
-// eslint-disable-next-line jsdoc/require-jsdoc
+// biome-ignore lint/style/noDefaultExport: needs to be default
 export default function integration(options?: Options): AstroIntegration {
   let serverEntry: string
   const opts = optionsSchema.parse(options)
