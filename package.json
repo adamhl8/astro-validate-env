@@ -43,11 +43,9 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
+    "@adamhl8/configs": "^0.3.0",
+    "@biomejs/biome": "^2.0.6",
     "@types/bun": "^1.2.17",
-    "eslint": "^9.29.0",
-    "eslint-config-builder": "^0.21.1",
-    "prettier": "^3.6.1",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.0"
+    "typescript": "^5.8.3"
   }
 }
