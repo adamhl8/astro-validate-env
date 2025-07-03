@@ -23,21 +23,13 @@
       "types": "./dist/types/index.d.ts"
     }
   },
-  "files": [
-    "dist/"
-  ],
-  "keywords": [
-    "astro",
-    "astro-integration",
-    "astro-component",
-    "withastro",
-    "utility",
-    "environment variables",
-    "env"
-  ],
+  "files": ["dist/"],
+  "keywords": ["astro", "astro-integration", "astro-component", "withastro", "utility", "environment variables", "env"],
   "scripts": {
-    "bundle": "bun lint && rm -rf dist && tsc -p ./tsconfig.build.json",
-    "lint": "tsc --noEmit && biome check --write"
+    "bundle": "rm -rf ./dist && bun lint && tsc && tsc-alias",
+    "lint": "tsc --noEmit && biome check --write",
+    "prepare": "find .githooks -type f -exec ln -srf {} .git/hooks/ \\;",
+    "prepublishOnly": "bun bundle"
   },
   "peerDependencies": {
     "astro": "^5.0.0"
