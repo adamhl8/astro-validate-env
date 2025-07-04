@@ -1,7 +1,7 @@
 import process from "node:process"
 import type { AstroIntegrationLogger } from "astro"
 
-import type { Vars } from "./index.js"
+import type { Vars } from "@/options.js"
 
 interface InvalidVar {
   key: string
