@@ -45,7 +45,7 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@adamhl8/configs": "^0.8.1",
+    "@adamhl8/configs": "^0.8.2",
     "@biomejs/biome": "^2.0.6",
     "@types/bun": "^1.2.18",
     "tsc-alias": "^1.8.16",
