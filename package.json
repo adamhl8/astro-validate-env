@@ -23,18 +23,8 @@
       "types": "./dist/types/index.d.ts"
     }
   },
-  "files": [
-    "dist/"
-  ],
-  "keywords": [
-    "astro",
-    "astro-integration",
-    "astro-component",
-    "withastro",
-    "utility",
-    "environment variables",
-    "env"
-  ],
+  "files": ["dist/"],
+  "keywords": ["astro", "astro-integration", "astro-component", "withastro", "utility", "environment variables", "env"],
   "scripts": {
     "bundle": "rm -rf ./dist && bun lint && tsc && tsc-alias",
     "lint": "tsc --noEmit && biome check --write",
