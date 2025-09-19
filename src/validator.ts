@@ -20,7 +20,6 @@ const getTimeString = () => {
   return timeString.split(" ")[0] ?? timeString
 }
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: ignore
 export function validateEnv(
   vars: Vars,
   astroContext: "dev" | "build" | "server",

@@ -1,6 +1,6 @@
 import { tsdownConfig } from "@adamhl8/configs"
 import { defineConfig } from "tsdown"
 
-const config = tsdownConfig({} as const)
+const config = tsdownConfig({ platform: "node" } as const)
 
 export default defineConfig(config)
