@@ -2,10 +2,10 @@ import * as fs from "node:fs/promises"
 import * as path from "node:path"
 import type { AstroIntegration } from "astro"
 
-import { generateEnvDeclaration } from "@/env-d-gen.js"
-import type { Options } from "@/options.js"
-import { optionsSchema } from "@/options.js"
-import { validateEnv } from "@/validator.js"
+import { generateEnvDeclaration } from "~/env-d-gen.js"
+import type { Options } from "~/options.js"
+import { optionsSchema } from "~/options.js"
+import { validateEnv } from "~/validator.js"
 
 // biome-ignore lint/style/noDefaultExport: needs to be default
 export default function integration(options?: Options): AstroIntegration {

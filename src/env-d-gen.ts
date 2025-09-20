@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises"
 import * as path from "node:path"
 import type { AstroIntegrationLogger } from "astro"
 
-import type { Vars } from "@/options.js"
+import type { Vars } from "~/options.js"
 
 export async function generateEnvDeclaration(
   vars: Vars,
