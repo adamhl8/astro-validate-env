@@ -27,7 +27,7 @@
   "keywords": ["astro", "astro-integration", "astro-component", "withastro", "utility", "environment variables", "env"],
   "scripts": {
     "bundle": "bun lint && tsdown",
-    "lint": "markdown-toc -i --bullets '-' --maxdepth 3 ./README.md && ts-import-fix -w && tsc --noEmit && biome check --write && adamhl8-knip",
+    "lint": "markdown-toc -i --bullets '-' --maxdepth 3 ./README.md && ts-import-fix -w -i '.mjs' && tsc --noEmit && biome check --write && adamhl8-knip",
     "prepare": "find .githooks -type f -exec ln -srf {} .git/hooks/ \\; || true",
     "prepublishOnly": "bun bundle"
   },
@@ -35,7 +35,7 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
-    "@adamhl8/configs": "^0.16.0",
+    "@adamhl8/configs": "^0.16.3",
     "@arethetypeswrong/core": "^0.18.2",
     "@biomejs/biome": "^2.2.4",
     "@types/bun": "^1.2.22",
