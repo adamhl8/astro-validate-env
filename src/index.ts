@@ -1,13 +1,14 @@
 import fs from "node:fs/promises"
 import path from "node:path"
+
 import type { AstroIntegration } from "astro"
 
-import { generateEnvDeclaration } from "~/env-d-gen.ts"
-import type { Options } from "~/options.ts"
-import { optionsSchema } from "~/options.ts"
-import { validateEnv } from "~/validator.ts"
+import { generateEnvDeclaration } from "#/env-d-gen.ts"
+import type { Options } from "#/options.ts"
+import { optionsSchema } from "#/options.ts"
+import { validateEnv } from "#/validator.ts"
 
-// biome-ignore lint/style/noDefaultExport: needs to be default
+// oxlint-disable-next-line import/no-default-export
 export default function integration(options?: Options): AstroIntegration {
   let serverEntry: string
   const opts = optionsSchema.parse(options)
@@ -16,13 +17,13 @@ export default function integration(options?: Options): AstroIntegration {
     name: "astro-validate-env",
     hooks: {
       "astro:config:setup": async ({ command, logger, isRestart, config }) => {
+        // oxlint-disable-next-line prefer-destructuring
         serverEntry = config.build.serverEntry
 
         if (isRestart) return
 
-        if (command === "sync") {
-          await generateEnvDeclaration(opts.vars, opts.envDeclarationFilePath, logger)
-        } else if (command === "dev" || command === "build") {
+        if (command === "sync") await generateEnvDeclaration(opts.vars, opts.envDeclarationFilePath, logger)
+        else if (command === "dev" || command === "build") {
           await generateEnvDeclaration(opts.vars, opts.envDeclarationFilePath, logger)
           validateEnv(opts.vars, command, logger)
         }

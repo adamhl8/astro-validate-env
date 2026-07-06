@@ -1,4 +1,4 @@
-import z from "astro/zod"
+import { z } from "astro/zod"
 
 export type Options =
   | {
@@ -11,13 +11,12 @@ export type Options =
       /**
        * A mapping of environment variable keys to their config
        *
-       * @example
        * ```ts
        * vars: {
        *   MY_VAR: {
        *     context: ["dev", "build", "server"],
        *     // ...
-       *   },
+       *   }
        * }
        * ```
        */
@@ -53,6 +52,8 @@ export type Options =
     }
   | undefined
 
+const exactlySchema = z.string().or(z.array(z.string())).optional()
+
 const varsSchema = z
   .record(
     z.string(),
@@ -60,7 +61,7 @@ const varsSchema = z
       context: z.enum(["dev", "build", "server"]).array().default(["dev", "build", "server"]),
       optional: z.boolean().default(false),
       secret: z.boolean().default(false),
-      exactly: z.string().optional().or(z.array(z.string()).optional()),
+      exactly: exactlySchema,
       startsWith: z.string().optional(),
       endsWith: z.string().optional(),
       includes: z.string().optional(),

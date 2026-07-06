@@ -1,14 +1,15 @@
 import fs from "node:fs/promises"
 import path from "node:path"
+
 import type { AstroIntegrationLogger } from "astro"
 
-import type { Vars } from "~/options.ts"
+import type { Vars } from "#/options.ts"
 
-export async function generateEnvDeclaration(
+export const generateEnvDeclaration = async (
   vars: Vars,
   envDeclarationFilePath: string,
   logger: AstroIntegrationLogger,
-) {
+) => {
   const lines: string[] = []
   for (const [key, varConfig] of Object.entries(vars)) {
     if (varConfig.optional) lines.push(`  readonly ${key}?: string`)

@@ -1,8 +1,1 @@
-{
-  "extends": "@adamhl8/configs/tsconfig",
-  "compilerOptions": {
-    "paths": {
-      "~/*": ["./src/*"]
-    }
-  }
-}
+{ "extends": "@adamhl8/configs/tsconfig" }
