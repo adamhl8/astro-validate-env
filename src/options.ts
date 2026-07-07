@@ -1,5 +1,8 @@
 import { z } from "astro/zod"
 
+const contexts = ["dev", "build", "server"] as const
+type Context = (typeof contexts)[number]
+
 export interface Options {
   /**
    * The path the `import.meta.env` declaration file will be written to, relative to the project root
@@ -24,7 +27,9 @@ export interface Options {
         string,
         {
           /** The context(s) where the variable is needed @default ["dev", "build", "server"] */
-          context?: ("dev" | "build" | "server")[] | undefined
+          // Accept any string (validated at runtime by the zod enum) but keep autocomplete for the known
+          // contexts, so a standalone object (whose context widens to string[]) is assignable without `as const`.
+          context?: (Context | (string & Record<never, never>))[] | undefined
           /** If `true`, no error will be thrown if the environment variable is missing @default false */
           optional?: boolean | undefined
           /** If `true`, the environment variable value will never be printed in log output @default false */
@@ -56,7 +61,10 @@ const varsSchema = z
   .record(
     z.string(),
     z.object({
-      context: z.enum(["dev", "build", "server"]).array().default(["dev", "build", "server"]),
+      context: z
+        .enum(contexts)
+        .array()
+        .default([...contexts]),
       optional: z.boolean().default(false),
       secret: z.boolean().default(false),
       exactly: exactlySchema,
