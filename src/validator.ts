@@ -18,7 +18,10 @@ const isNativeConsole = (logger: typeof console | AstroIntegrationLogger): logge
 
 const getTimeString = () => {
   const timeString = new Date().toTimeString()
-  return timeString.split(" ")[0] ?? timeString
+  // toTimeString() is always "HH:MM:SS ...", so split[0] is never undefined; the ?? only appeases noUncheckedIndexedAccess
+  /* v8 ignore next */
+  const [time] = timeString.split(" ")
+  return time
 }
 
 const getValueIssues = (value: string, varConfig: Vars[string]): string[] => {
@@ -47,6 +50,9 @@ const getValueString = ({ value, secret }: InvalidVar): string => {
   return `=${value}`
 }
 
+export const successMessage = "All configured environment variables are valid"
+export const errorMessage = "The following environment variables are invalid:"
+
 export const validateEnv = (
   vars: Vars,
   astroContext: "dev" | "build" | "server",
@@ -72,10 +78,10 @@ export const validateEnv = (
   }
 
   if (invalidVars.length > 0) {
-    logger.error(`${getLogPrefix()}The following environment variables are invalid:\n`)
+    logger.error(`${getLogPrefix()}${errorMessage}\n`)
     for (const invalidVar of invalidVars)
       console.error(`${invalidVar.key}${getValueString(invalidVar)} -> ${invalidVar.issues.join(", ")}`)
 
     process.exit(1)
-  } else logger.info(`${getLogPrefix()}All configured environment variables are valid`)
+  } else logger.info(`${getLogPrefix()}${successMessage}`)
 }

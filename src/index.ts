@@ -8,9 +8,20 @@ import type { Options } from "#/options.ts"
 import { optionsSchema } from "#/options.ts"
 import { validateEnv } from "#/validator.ts"
 
+export { type Options } from "#/options.ts"
+
+export const entryFileCode = `
+import avefs from "node:fs"
+import { validateEnv as aveValidateEnv } from "./astro-validate-env.mjs"
+const aveVars = avefs.readFileSync(\`\${import.meta.dirname}/astro-validate-env.json\`)
+aveValidateEnv(JSON.parse(aveVars), "server", console)
+`.trim()
+
 // oxlint-disable-next-line import/no-default-export
 export default function integration(options?: Options): AstroIntegration {
   let serverEntry: string
+  let serverDir: URL
+  let isSsrBuild = false
   const opts = optionsSchema.parse(options)
 
   return {
@@ -19,6 +30,7 @@ export default function integration(options?: Options): AstroIntegration {
       "astro:config:setup": async ({ command, logger, isRestart, config }) => {
         // oxlint-disable-next-line prefer-destructuring
         serverEntry = config.build.serverEntry
+        serverDir = config.build.server
 
         if (isRestart) return
 
@@ -28,23 +40,23 @@ export default function integration(options?: Options): AstroIntegration {
           validateEnv(opts.vars, command, logger)
         }
       },
-      "astro:build:ssr": async ({ manifest, logger }) => {
+      // build:ssr only fires for server builds, and before build:done, so it flags that injection is needed
+      "astro:build:ssr": () => {
+        isSsrBuild = true
+      },
+      // Inject in build:done: it's the last hook, after Astro has finished writing/rewriting the server entry.
+      // (Injecting earlier in build:ssr gets clobbered when Astro rewrites the manifest chunk in place.)
+      "astro:build:done": async ({ logger }) => {
+        if (!isSsrBuild) return
+
         logger.info("Adding env validation to server build...")
 
-        const serverDirPath = new URL(manifest.buildServerDir).pathname
-        const entryFilePath = `${serverDirPath}${serverEntry}`
+        const entryFilePath = `${serverDir.pathname}${serverEntry}`
         const entryFileDirPath = path.dirname(entryFilePath)
         const entryFileContent = await fs.readFile(entryFilePath, { encoding: "utf8" })
 
         await fs.cp(`${import.meta.dirname}/validator.js`, `${entryFileDirPath}/astro-validate-env.mjs`)
         await fs.writeFile(`${entryFileDirPath}/astro-validate-env.json`, JSON.stringify(opts.vars))
-
-        const entryFileCode = `
-import avefs from "node:fs"
-import { validateEnv as aveValidateEnv } from "./astro-validate-env.mjs"
-const aveVars = avefs.readFileSync(\`\${import.meta.dirname}/astro-validate-env.json\`)
-aveValidateEnv(JSON.parse(aveVars), "server", console)
-`.trim()
 
         await fs.writeFile(entryFilePath, `${entryFileCode}\n${entryFileContent}`)
 

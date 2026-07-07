@@ -158,7 +158,7 @@ To allow for validation when using a server adapter/SSR, this integration automa
 > [!IMPORTANT]
 > If this integration does not work with your server adapter, please open an issue.
 
-The injected code looks exactly like this:
+The injected code looks like this:
 
 ```js
 // import as `avefs` to avoid conflicts

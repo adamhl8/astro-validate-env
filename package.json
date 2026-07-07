@@ -47,6 +47,9 @@
     "@commitlint/cli": "^21.2.0",
     "@commitlint/config-conventional": "^21.2.0",
     "@types/node": "^26.1.0",
+    "@vitest/coverage-v8": "^4.1.9",
+    "execa": "^9.6.1",
+    "get-port-please": "^3.2.0",
     "knip": "^6.24.0",
     "markdown-toc": "^1.2.0",
     "oxfmt": "^0.57.0",
@@ -55,9 +58,17 @@
     "publint": "^0.3.21",
     "release-it": "^20.2.1",
     "tsdown": "^0.22.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   },
   "peerDependencies": {
-    "astro": "^5.0.0"
+    "astro": "^7.0.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "nub",
+      "version": "^0.3.0",
+      "onFail": "warn"
+    }
   }
 }
