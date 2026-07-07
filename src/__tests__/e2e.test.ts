@@ -69,7 +69,7 @@ describe("e2e", () => {
     await fixtureExeca`rm -f package-lock.json`
     await fixtureExeca`npm install astro @astrojs/node` // install directly so they stay on the latest version
     await fixtureExeca`npm link astro-validate-env`
-  }, 30_000)
+  })
 
   describe("astro build", () => {
     it("succeeds and validates env", async () => {
