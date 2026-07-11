@@ -4,6 +4,7 @@ import { tmpdir } from "node:os"
 import path from "node:path"
 
 import type { AstroIntegration, AstroIntegrationLogger } from "astro"
+import bun from "bun"
 
 import { generateEnvDeclaration } from "#env-d-gen.ts"
 import integration, { entryFileCode } from "#index.ts"
@@ -201,7 +202,7 @@ describe("generateEnvDeclaration", () => {
 
     await generateEnvDeclaration(parseVars({ AVE_REQUIRED: {}, AVE_OPTIONAL: { optional: true } }), filePath, logger)
 
-    const declaration = await Bun.file(filePath).text()
+    const declaration = await bun.file(filePath).text()
     expect(declaration).toContain("  readonly AVE_REQUIRED: string")
     expect(declaration).toContain("  readonly AVE_OPTIONAL?: string")
     expect(infoLogs).toContain(`Generated '${filePath}'`)
@@ -226,7 +227,7 @@ describe("integration", () => {
 
   it("generates the declaration file on sync", async () => {
     const { envDeclarationFilePath } = await runConfigSetup({ AVE_ANY: {} }, "sync")
-    const declaration = await Bun.file(envDeclarationFilePath).text()
+    const declaration = await bun.file(envDeclarationFilePath).text()
     expect(declaration).toContain("readonly AVE_ANY: string")
   })
 
@@ -242,8 +243,8 @@ describe("integration", () => {
     const restart = await runConfigSetup({ AVE_ANY: {} }, "build", true)
     const preview = await runConfigSetup({ AVE_ANY: {} }, "preview")
 
-    expect(await Bun.file(restart.envDeclarationFilePath).exists()).toBe(false)
-    expect(await Bun.file(preview.envDeclarationFilePath).exists()).toBe(false)
+    expect(await bun.file(restart.envDeclarationFilePath).exists()).toBe(false)
+    expect(await bun.file(preview.envDeclarationFilePath).exists()).toBe(false)
   })
 
   it("skips server injection when the build is not SSR", async () => {
@@ -265,16 +266,16 @@ describe("integration", () => {
     // isRestart short-circuits config:setup once it captures the server dir, so build:done can find the entry file.
     const { dir, hooks } = await runConfigSetup({ AVE_ANY: {} }, "build", true)
     const entryFilePath = path.join(dir, "entry.mjs")
-    await Bun.write(entryFilePath, "export const handler = () => {}\n")
+    await bun.write(entryFilePath, "export const handler = () => {}\n")
 
     await runBuildSsr(hooks)
     await runBuildDone(hooks)
 
-    const written = await Bun.file(entryFilePath).text()
+    const written = await bun.file(entryFilePath).text()
     expect(written.startsWith(entryFileCode)).toBe(true)
     expect(written).toContain("export const handler")
     expect(cp).toHaveBeenCalledWith(expect.stringContaining("validator.js"), path.join(dir, "astro-validate-env.mjs"))
-    const sidecar = await Bun.file(path.join(dir, "astro-validate-env.json")).text()
+    const sidecar = await bun.file(path.join(dir, "astro-validate-env.json")).text()
     expect(JSON.parse(sidecar)).toHaveProperty("AVE_ANY")
   })
 })

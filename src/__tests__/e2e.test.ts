@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test"
 import path from "node:path"
 
+import bun from "bun"
 import { execa } from "execa"
 import type { Options } from "execa"
 import { getPort } from "get-port-please"
@@ -51,7 +52,7 @@ const waitForServer = async (url: string) => {
       response = await fetch(url)
     } catch {
       // oxlint-disable-next-line no-await-in-loop
-      await Bun.sleep(100)
+      await bun.sleep(100)
     }
   }
   return response
@@ -82,18 +83,18 @@ describe("e2e", () => {
     }, 30_000)
 
     it("injects the validation snippet and sidecar files into the server build", async () => {
-      const serverEntry = await Bun.file(SERVER_ENTRY_PATH).text()
+      const serverEntry = await bun.file(SERVER_ENTRY_PATH).text()
       expect(serverEntry.startsWith(entryFileCode)).toBe(true)
 
-      expect(await Bun.file(VALIDATOR_PATH).exists()).toBe(true)
+      expect(await bun.file(VALIDATOR_PATH).exists()).toBe(true)
 
-      const envJson = await Bun.file(ENV_JSON_PATH).text()
+      const envJson = await bun.file(ENV_JSON_PATH).text()
       const vars: unknown = JSON.parse(envJson)
       expect(vars).toMatchObject(validateEnvOptions.vars)
     })
 
     it("generates the env declaration file with required and optional shape", async () => {
-      const envDeclaration = await Bun.file(ENV_DECLARATION_PATH).text()
+      const envDeclaration = await bun.file(ENV_DECLARATION_PATH).text()
 
       expect(envDeclaration).toContain("readonly TEST_REQUIRED: string")
       expect(envDeclaration).toContain("readonly TEST_OPTIONAL?: string")
