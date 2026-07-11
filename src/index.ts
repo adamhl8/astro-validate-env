@@ -3,12 +3,12 @@ import path from "node:path"
 
 import type { AstroIntegration } from "astro"
 
-import { generateEnvDeclaration } from "#/env-d-gen.ts"
-import type { Options } from "#/options.ts"
-import { optionsSchema } from "#/options.ts"
-import { validateEnv } from "#/validator.ts"
+import { generateEnvDeclaration } from "#env-d-gen.ts"
+import type { Options } from "#options.ts"
+import { optionsSchema } from "#options.ts"
+import { validateEnv } from "#validator.ts"
 
-export { type Options } from "#/options.ts"
+export { type Options } from "#options.ts"
 
 export const entryFileCode = `
 import avefs from "node:fs"

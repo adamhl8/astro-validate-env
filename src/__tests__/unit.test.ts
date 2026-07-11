@@ -1,16 +1,15 @@
-import { existsSync } from "node:fs"
+import { afterAll, describe, expect, it, spyOn } from "bun:test"
 import fs from "node:fs/promises"
 import { tmpdir } from "node:os"
 import path from "node:path"
 
 import type { AstroIntegration, AstroIntegrationLogger } from "astro"
-import { afterAll, describe, expect, it, vi } from "vitest"
 
-import { generateEnvDeclaration } from "#/env-d-gen.ts"
-import integration, { entryFileCode } from "#/index.ts"
-import type { Options } from "#/options.ts"
-import { optionsSchema } from "#/options.ts"
-import { errorMessage, successMessage, validateEnv } from "#/validator.ts"
+import { generateEnvDeclaration } from "#env-d-gen.ts"
+import integration, { entryFileCode } from "#index.ts"
+import type { Options } from "#options.ts"
+import { optionsSchema } from "#options.ts"
+import { errorMessage, successMessage, validateEnv } from "#validator.ts"
 
 type Hooks = AstroIntegration["hooks"]
 type HookParams<T> = NonNullable<T> extends (...args: infer P) => unknown ? P[0] : never
@@ -25,7 +24,7 @@ const makeTempDir = async () => {
   return dir
 }
 
-// A real capturing logger (not vi.fn) that records what was logged, cast to the astro logger shape.
+// A real capturing logger (not a mock) that records what was logged, cast to the astro logger shape.
 const createLogger = () => {
   const infoLogs: string[] = []
   const errorLogs: string[] = []
@@ -67,10 +66,10 @@ const runBuildDone = async (hooks: Hooks) => {
 }
 
 const spyOnFailure = () => {
-  vi.spyOn(process, "exit").mockImplementation((code) => {
+  spyOn(process, "exit").mockImplementation((code) => {
     throw new Error(`process.exit(${code})`)
   })
-  const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {
+  const errorSpy = spyOn(console, "error").mockImplementation(() => {
     /* empty */
   })
   return errorSpy
@@ -78,7 +77,7 @@ const spyOnFailure = () => {
 
 describe("validateEnv", () => {
   it("logs the success message via the astro logger when every var is valid", () => {
-    vi.stubEnv("AVE_OK", "https://example.com")
+    process.env["AVE_OK"] = "https://example.com"
     const { logger, infoLogs } = createLogger()
 
     validateEnv(
@@ -91,8 +90,8 @@ describe("validateEnv", () => {
   })
 
   it("prefixes a timestamp and the integration name in the server context (native console)", () => {
-    vi.stubEnv("AVE_OK", "x")
-    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {
+    process.env["AVE_OK"] = "x"
+    const infoSpy = spyOn(console, "info").mockImplementation(() => {
       /* empty */
     })
 
@@ -129,7 +128,7 @@ describe("validateEnv", () => {
   })
 
   it("collects every value constraint issue", () => {
-    vi.stubEnv("AVE_MULTI", "abc")
+    process.env["AVE_MULTI"] = "abc"
     const errorSpy = spyOnFailure()
 
     expect(() => {
@@ -147,10 +146,10 @@ describe("validateEnv", () => {
   })
 
   it("matches 'exactly' against a string or an array of allowed values", () => {
-    vi.stubEnv("AVE_STR", "wrong")
-    vi.stubEnv("AVE_ARR", "wrong")
-    vi.stubEnv("AVE_STR_OK", "right")
-    vi.stubEnv("AVE_ARR_OK", "b")
+    process.env["AVE_STR"] = "wrong"
+    process.env["AVE_ARR"] = "wrong"
+    process.env["AVE_STR_OK"] = "right"
+    process.env["AVE_ARR_OK"] = "b"
     const errorSpy = spyOnFailure()
 
     expect(() => {
@@ -174,8 +173,8 @@ describe("validateEnv", () => {
   })
 
   it("masks secret values, quotes empty values, and uses the singular character count", () => {
-    vi.stubEnv("AVE_SECRET", "nope")
-    vi.stubEnv("AVE_EMPTY", "")
+    process.env["AVE_SECRET"] = "nope"
+    process.env["AVE_EMPTY"] = ""
     const errorSpy = spyOnFailure()
 
     expect(() => {
@@ -202,7 +201,7 @@ describe("generateEnvDeclaration", () => {
 
     await generateEnvDeclaration(parseVars({ AVE_REQUIRED: {}, AVE_OPTIONAL: { optional: true } }), filePath, logger)
 
-    const declaration = await fs.readFile(filePath, "utf8")
+    const declaration = await Bun.file(filePath).text()
     expect(declaration).toContain("  readonly AVE_REQUIRED: string")
     expect(declaration).toContain("  readonly AVE_OPTIONAL?: string")
     expect(infoLogs).toContain(`Generated '${filePath}'`)
@@ -227,11 +226,12 @@ describe("integration", () => {
 
   it("generates the declaration file on sync", async () => {
     const { envDeclarationFilePath } = await runConfigSetup({ AVE_ANY: {} }, "sync")
-    await expect(fs.readFile(envDeclarationFilePath, "utf8")).resolves.toContain("readonly AVE_ANY: string")
+    const declaration = await Bun.file(envDeclarationFilePath).text()
+    expect(declaration).toContain("readonly AVE_ANY: string")
   })
 
   it("generates and validates on dev/build", async () => {
-    vi.stubEnv("AVE_ANY", "value")
+    process.env["AVE_ANY"] = "value"
 
     const { infoLogs } = await runConfigSetup({ AVE_ANY: {} }, "build")
 
@@ -242,12 +242,12 @@ describe("integration", () => {
     const restart = await runConfigSetup({ AVE_ANY: {} }, "build", true)
     const preview = await runConfigSetup({ AVE_ANY: {} }, "preview")
 
-    expect(existsSync(restart.envDeclarationFilePath)).toBe(false)
-    expect(existsSync(preview.envDeclarationFilePath)).toBe(false)
+    expect(await Bun.file(restart.envDeclarationFilePath).exists()).toBe(false)
+    expect(await Bun.file(preview.envDeclarationFilePath).exists()).toBe(false)
   })
 
   it("skips server injection when the build is not SSR", async () => {
-    const cp = vi.spyOn(fs, "cp").mockImplementation(async () => {
+    const cp = spyOn(fs, "cp").mockImplementation(async () => {
       /* empty */
     })
     const { hooks } = integration()
@@ -259,22 +259,22 @@ describe("integration", () => {
 
   it("injects the validator and prepends the entry code on an SSR build", async () => {
     // The injection copies a sibling validator.js that only exists next to the built dist, so this one spy is unavoidable.
-    const cp = vi.spyOn(fs, "cp").mockImplementation(async () => {
+    const cp = spyOn(fs, "cp").mockImplementation(async () => {
       /* empty */
     })
     // isRestart short-circuits config:setup once it captures the server dir, so build:done can find the entry file.
     const { dir, hooks } = await runConfigSetup({ AVE_ANY: {} }, "build", true)
     const entryFilePath = path.join(dir, "entry.mjs")
-    await fs.writeFile(entryFilePath, "export const handler = () => {}\n")
+    await Bun.write(entryFilePath, "export const handler = () => {}\n")
 
     await runBuildSsr(hooks)
     await runBuildDone(hooks)
 
-    const written = await fs.readFile(entryFilePath, "utf8")
+    const written = await Bun.file(entryFilePath).text()
     expect(written.startsWith(entryFileCode)).toBe(true)
     expect(written).toContain("export const handler")
     expect(cp).toHaveBeenCalledWith(expect.stringContaining("validator.js"), path.join(dir, "astro-validate-env.mjs"))
-    const sidecar = await fs.readFile(path.join(dir, "astro-validate-env.json"), "utf8")
+    const sidecar = await Bun.file(path.join(dir, "astro-validate-env.json")).text()
     expect(JSON.parse(sidecar)).toHaveProperty("AVE_ANY")
   })
 })

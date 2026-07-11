@@ -3,7 +3,7 @@ import path from "node:path"
 
 import type { AstroIntegrationLogger } from "astro"
 
-import type { Vars } from "#/options.ts"
+import type { Vars } from "#options.ts"
 
 export const generateEnvDeclaration = async (
   vars: Vars,

@@ -1,19 +1,16 @@
-import { existsSync } from "node:fs"
-import { readFile } from "node:fs/promises"
+import { beforeAll, describe, expect, it } from "bun:test"
 import path from "node:path"
-import { setTimeout } from "node:timers/promises"
 
 import { execa } from "execa"
 import type { Options } from "execa"
 import { getPort } from "get-port-please"
-import { beforeAll, describe, expect, it } from "vitest"
 
-import { validateEnvOptions } from "#/__tests__/fixture/validate-env-options.ts"
-import { entryFileCode } from "#/index.ts"
-import { errorMessage, successMessage } from "#/validator.ts"
+import { validateEnvOptions } from "#__tests__/fixture/validate-env-options.ts"
+import { entryFileCode } from "#index.ts"
+import { errorMessage, successMessage } from "#validator.ts"
 
-const PROJECT_ROOT = path.resolve(import.meta.dirname, "../..")
-const FIXTURE_DIR = path.resolve(import.meta.dirname, "fixture")
+const PROJECT_ROOT = path.resolve(import.meta.dir, "../..")
+const FIXTURE_DIR = path.resolve(import.meta.dir, "fixture")
 const DIST_SERVER_DIR = path.resolve(FIXTURE_DIR, "dist", "server")
 const SERVER_ENTRY_PATH = path.resolve(DIST_SERVER_DIR, "entry.mjs")
 const VALIDATOR_PATH = path.resolve(DIST_SERVER_DIR, "astro-validate-env.mjs")
@@ -54,7 +51,7 @@ const waitForServer = async (url: string) => {
       response = await fetch(url)
     } catch {
       // oxlint-disable-next-line no-await-in-loop
-      await setTimeout(100)
+      await Bun.sleep(100)
     }
   }
   return response
@@ -62,14 +59,16 @@ const waitForServer = async (url: string) => {
 
 describe("e2e", () => {
   beforeAll(async () => {
-    await projectExeca`nubx tsdown`
+    console.write("Setting up fixture...")
+    await projectExeca`bun tsdown`
     await projectExeca`npm link`
 
     const { fixtureExeca } = await createFixtureExeca({ reject: true })
-    await fixtureExeca`rm -f package-lock.json`
+    await fixtureExeca`rm -rf node_modules package-lock.json`
     await fixtureExeca`npm install astro @astrojs/node` // install directly so they stay on the latest version
     await fixtureExeca`npm link astro-validate-env`
-  })
+    console.write("done\n")
+  }, 120_000)
 
   describe("astro build", () => {
     it("succeeds and validates env", async () => {
@@ -80,21 +79,21 @@ describe("e2e", () => {
 
       expect(all).toContain(successMessage)
       expect(exitCode).toBe(0)
-    })
+    }, 30_000)
 
     it("injects the validation snippet and sidecar files into the server build", async () => {
-      const serverEntry = await readFile(SERVER_ENTRY_PATH, "utf8")
+      const serverEntry = await Bun.file(SERVER_ENTRY_PATH).text()
       expect(serverEntry.startsWith(entryFileCode)).toBe(true)
 
-      expect(existsSync(VALIDATOR_PATH)).toBe(true)
+      expect(await Bun.file(VALIDATOR_PATH).exists()).toBe(true)
 
-      const envJson = await readFile(ENV_JSON_PATH, "utf8")
+      const envJson = await Bun.file(ENV_JSON_PATH).text()
       const vars: unknown = JSON.parse(envJson)
       expect(vars).toMatchObject(validateEnvOptions.vars)
     })
 
     it("generates the env declaration file with required and optional shape", async () => {
-      const envDeclaration = await readFile(ENV_DECLARATION_PATH, "utf8")
+      const envDeclaration = await Bun.file(ENV_DECLARATION_PATH).text()
 
       expect(envDeclaration).toContain("readonly TEST_REQUIRED: string")
       expect(envDeclaration).toContain("readonly TEST_OPTIONAL?: string")
@@ -109,7 +108,7 @@ describe("e2e", () => {
       expect(all).toContain("TEST_REQUIRED")
       expect(all).toContain("Missing")
       expect(all).toContain("Expected to be a valid URL")
-    })
+    }, 30_000)
   })
 
   describe("astro dev", () => {
@@ -120,7 +119,7 @@ describe("e2e", () => {
 
       expect(exitCode).not.toBe(0)
       expect(all).toContain(errorMessage)
-    })
+    }, 30_000)
   })
 
   describe("built server", () => {
@@ -139,7 +138,7 @@ describe("e2e", () => {
       const { all, isTerminated } = await astroDev
       expect(isTerminated).toBe(true)
       expect(all).toContain(`[astro-validate-env] ${successMessage}`)
-    })
+    }, 30_000)
 
     it("exits and masks a secret when a server var is invalid", async () => {
       const { fixtureExeca } = await createFixtureExeca({ node: true }, { TEST_REQUIRED: "x", TEST_SECRET: "bad" })
@@ -149,6 +148,6 @@ describe("e2e", () => {
       expect(exitCode).not.toBe(0)
       expect(all).toContain("TEST_SECRET=<secret> ->")
       expect(all).toContain("Expected to start with 'sk-'")
-    })
+    }, 30_000)
   })
 })
