@@ -2,9 +2,9 @@
 pathIgnorePatterns = ["fixtures/**", "fixture/**"]
 coverage = true
 coverageSkipTestFiles = true
+coveragePathIgnorePatterns = ["src/test-setup.ts", "src/__tests__/fixture/**"]
 concurrentTestGlob = "off"
 onlyFailures = true
-coveragePathIgnorePatterns = ["src/__tests__/fixture/**", "**/test-setup.ts"]
 preload = ["./src/test-setup.ts"]
 
 [install]
