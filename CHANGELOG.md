@@ -1,3 +1,15 @@
+## [0.4.2](https://github.com/adamhl8/astro-validate-env/compare/v0.4.1..v0.4.2) - 2026-09-24
+
+### 🐛 Bug Fixes
+
+- _(ci)_ pass through CI in fixture env ([05699ee](https://github.com/adamhl8/astro-validate-env/commit/05699ee9ab57550a82a28cfdc50deafe8d8277c3) by @adamhl8)
+
+### ⚙️ Miscellaneous Tasks
+
+- _(deps)_ update dependencies ([cef96cf](https://github.com/adamhl8/astro-validate-env/commit/cef96cf9db80d946ae5765d742a7739cb83996a0) by @adamhl8)
+
+- _(tsdown)_ remove failOnWarn override ([fbb4d4c](https://github.com/adamhl8/astro-validate-env/commit/fbb4d4cd3592ea677658da15c0eb309c046ab2fc) by @adamhl8)
+
 ## [0.4.1](https://github.com/adamhl8/astro-validate-env/compare/v0.4.0..v0.4.1) - 2026-07-13
 
 ### ⚙️ Miscellaneous Tasks

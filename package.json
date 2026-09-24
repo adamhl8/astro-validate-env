@@ -1,6 +1,6 @@
 {
   "name": "astro-validate-env",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "An environment variable validation integration for Astro",
   "keywords": [
     "astro",
