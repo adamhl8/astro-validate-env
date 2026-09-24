@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "bun:test"
 import path from "node:path"
 
-import bun from "bun"
+import bun, { sleep } from "bun"
 import { execa } from "execa"
 import type { Options } from "execa"
 import { getPort } from "get-port-please"
@@ -52,7 +52,7 @@ const waitForServer = async (url: string) => {
       response = await fetch(url)
     } catch {
       // oxlint-disable-next-line no-await-in-loop
-      await bun.sleep(100)
+      await sleep(100)
     }
   }
   return response

@@ -18,8 +18,6 @@ const isNativeConsole = (logger: typeof console | AstroIntegrationLogger): logge
 
 const getTimeString = () => {
   const timeString = new Date().toTimeString()
-  // toTimeString() is always "HH:MM:SS ...", so split[0] is never undefined; the ?? only appeases noUncheckedIndexedAccess
-  /* v8 ignore next */
   const [time] = timeString.split(" ")
   return time
 }

@@ -29,15 +29,16 @@ const makeTempDir = async () => {
 const createLogger = () => {
   const infoLogs: string[] = []
   const errorLogs: string[] = []
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-  const logger = {
+  const capturingLogger = {
     info: (message: string) => {
       infoLogs.push(message)
     },
     error: (message: string) => {
       errorLogs.push(message)
     },
-  } as unknown as AstroIntegrationLogger
+  }
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  const logger = capturingLogger as unknown as AstroIntegrationLogger
 
   return { logger, infoLogs, errorLogs }
 }
