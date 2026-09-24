@@ -21,10 +21,11 @@ const ENV_DECLARATION_PATH = path.resolve(FIXTURE_DIR, "import.meta.env.d.ts")
 const baseExeca = execa({ all: true, extendEnv: false, preferLocal: true } satisfies Options)
 const projectExeca = baseExeca({ cwd: PROJECT_ROOT, env: process.env } satisfies Options)
 
-const { PATH } = process.env
+const { PATH, CI } = process.env
 const HOST = "127.0.0.1"
 const cleanFixtureEnv = {
   PATH,
+  CI,
   ASTRO_TELEMETRY_DISABLED: "1",
   NO_COLOR: "1",
   ASTRO_DEV_BACKGROUND: "1",
