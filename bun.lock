@@ -5,7 +5,7 @@
     "": {
       "name": "astro-validate-env",
       "devDependencies": {
-        "@adamhl8/configs": "^2.8.0",
+        "@adamhl8/configs": "^2.8.1",
         "@arethetypeswrong/core": "^0.18.5",
         "@commitlint/cli": "^21.2.3",
         "@commitlint/config-conventional": "^21.2.3",
@@ -29,7 +29,7 @@
     },
   },
   "packages": {
-    "@adamhl8/configs": ["@adamhl8/configs@2.8.0", "", { "dependencies": { "@adamhl8/eslint-plugin-clean-modules": "^0.1.5", "@commitlint/config-conventional": "^21.2.3", "@commitlint/types": "^21.2.3", "arkenv": "^0.12.3", "arktype": "^2.2.3", "es-toolkit": "^1.52.0", "ts-explicit-errors": "^4.1.3", "type-fest": "^5.10.0" }, "peerDependencies": { "@arethetypeswrong/core": ">=0.18", "@commitlint/cli": ">=21", "knip": ">=6", "markdown-toc": ">=1", "oxfmt": ">=0.50", "oxlint": ">=1", "oxlint-tsgolint": ">=0.24", "publint": ">=0.3", "release-it": ">=21", "release-it-git-cliff": ">=0.1", "tsdown": ">=0.20", "typescript": "^7.0.0" }, "optionalPeers": ["@arethetypeswrong/core", "publint", "release-it", "release-it-git-cliff", "tsdown"], "bin": { "adamhl8-bunfig": "dist/adamhl8-bunfig/index", "adamhl8-gitignore": "dist/adamhl8-gitignore/index" } }, "sha512-5Ln0XM7PUG83atfjLmFrwWhrbe7wrXTiqN+Zf3o101q47PKkODjOYqNYw6YvIIvx5VLxBJ4GiEgBThH6jpvEiQ=="],
+    "@adamhl8/configs": ["@adamhl8/configs@2.8.1", "", { "dependencies": { "@adamhl8/eslint-plugin-clean-modules": "^0.1.5", "@commitlint/config-conventional": "^21.2.3", "@commitlint/types": "^21.2.3", "arkenv": "^0.12.3", "arktype": "^2.2.5", "es-toolkit": "^1.52.0", "ts-explicit-errors": "^4.1.3", "type-fest": "^5.10.0" }, "peerDependencies": { "@arethetypeswrong/core": ">=0.18", "@commitlint/cli": ">=21", "knip": ">=6", "markdown-toc": ">=1", "oxfmt": ">=0.50", "oxlint": ">=1", "oxlint-tsgolint": ">=0.24", "publint": ">=0.3", "release-it": ">=21", "release-it-git-cliff": ">=0.1", "tsdown": ">=0.20", "typescript": "^7.0.0" }, "optionalPeers": ["@arethetypeswrong/core", "publint", "release-it", "release-it-git-cliff", "tsdown"], "bin": { "adamhl8-bunfig": "dist/adamhl8-bunfig/index", "adamhl8-gitignore": "dist/adamhl8-gitignore/index" } }, "sha512-JTUc8e4Uo/klq+3xRpcereh1SyykViyrzqmqSV5bWrdML1PB92FlSC8H1McAoXc603ESEcFcpAbZQNIlTuX3JA=="],
 
     "@adamhl8/eslint-plugin-clean-modules": ["@adamhl8/eslint-plugin-clean-modules@0.1.5", "", { "dependencies": { "@typescript-eslint/types": "^8.63.0", "@typescript-eslint/utils": "^8.63.0" } }, "sha512-0Icl5jzQobbjwikMCOpZENa6caNrRNBRaIt/4Y0tISnZGXN8iCB30OCynOho2TbSkC/xfnUqg3p2v6mb+cMc9g=="],
 
@@ -37,9 +37,9 @@
 
     "@arethetypeswrong/core": ["@arethetypeswrong/core@0.18.5", "", { "dependencies": { "@andrewbranch/untar.js": "^1.0.3", "@loaderkit/resolve": "^1.0.2", "cjs-module-lexer": "^1.2.3", "fflate": "^0.8.3", "lru-cache": "^11.0.1", "semver": "^7.5.4", "typescript": "5.6.1-rc", "validate-npm-package-name": "^5.0.0" } }, "sha512-9ytjzGwxjm9Uz7I9avfbt5vlQt6uk9uRRESzJjqrznl6WKvI6dwYTo+vJ3U02Wrq/mR3iql/PzhvHhKdJIAjDQ=="],
 
-    "@ark/schema": ["@ark/schema@0.56.2", "", { "dependencies": { "@ark/util": "0.56.2" } }, "sha512-Qx4D2JFbBWpntiHZaTv7bGG4H/M2rigiknezKg/WVyDSaLdE4YCcWAOoFB7pjjDqHbbV2OqRfntm1nnXvwMexg=="],
+    "@ark/schema": ["@ark/schema@0.56.4", "", { "dependencies": { "@ark/util": "0.56.4" } }, "sha512-nd4OqaWdKZJeGF5zNmZysDQO7NyyJ1ycl4S7i16Hj1VxqL+x72Z66lOn7ErpsoMUZtCtslAMHMjqJhuQSxciyw=="],
 
-    "@ark/util": ["@ark/util@0.56.2", "", {}, "sha512-9kU2sUE38FZEGG7l3hamYMBieLYEJh2L1mrYD2eXpT+78EnQSV1bhjxJhnxGBMSTbtwpBSDNSK+K60WvaI/DTQ=="],
+    "@ark/util": ["@ark/util@0.56.4", "", {}, "sha512-KKqwGSia44cvuuDY70jGfbiUdG2E8F2cM4npdqvJ22S5a0LknlwG6nIrfQG1nF8fzxpzP30098wp0a8ASs0prQ=="],
 
     "@astrojs/compiler-binding": ["@astrojs/compiler-binding@0.5.0", "", { "optionalDependencies": { "@astrojs/compiler-binding-android-arm64": "0.5.0", "@astrojs/compiler-binding-darwin-arm64": "0.5.0", "@astrojs/compiler-binding-darwin-x64": "0.5.0", "@astrojs/compiler-binding-linux-arm64-gnu": "0.5.0", "@astrojs/compiler-binding-linux-arm64-musl": "0.5.0", "@astrojs/compiler-binding-linux-x64-gnu": "0.5.0", "@astrojs/compiler-binding-linux-x64-musl": "0.5.0", "@astrojs/compiler-binding-wasm32-wasi": "0.5.0", "@astrojs/compiler-binding-win32-arm64-msvc": "0.5.0", "@astrojs/compiler-binding-win32-x64-msvc": "0.5.0" } }, "sha512-PxFTx3WoxQnbgUvvwmF6LRQwhHO77a4pewOtJvzxlrYtQ90tLgomLKvks/akrd2iix2ngGlOhxQonKNd8YoBHg=="],
 
@@ -741,9 +741,9 @@
 
     "arkenv": ["arkenv@0.12.3", "", { "peerDependencies": { "arktype": "^2.1.22" }, "optionalPeers": ["arktype"] }, "sha512-MX1/O52eG+XysuCotCyBvjZBbBk4qFbefqSYcb337gLwYOgNQhbtDrTOr+biMhjfAyGo3s+3Kn+fLH4aYgxTtg=="],
 
-    "arkregex": ["arkregex@0.0.8", "", { "dependencies": { "@ark/util": "0.56.2" } }, "sha512-PJcx6G1kQTgLKPUbeYlYecDRaKq15AMSGVajlKFYWlPeJRQL+j3dKE6tyMs40HZ99djS1l9Vhl3ezAHy9JBIqQ=="],
+    "arkregex": ["arkregex@0.0.10", "", { "dependencies": { "@ark/util": "0.56.4" } }, "sha512-+iDWBYBjH8w7wqEv8VY4loBwRldFxX84KNwKbobH3FJPay/18XI9sTesmXYpKyIrgbC5z/s16+vSJYHCC9FEvQ=="],
 
-    "arktype": ["arktype@2.2.3", "", { "dependencies": { "@ark/schema": "0.56.2", "@ark/util": "0.56.2", "arkregex": "0.0.8" } }, "sha512-7W+0RLTUNJiBFIIZXwOQxSR8Z273IAd6IvqBeG9+gHnQKFsIx2C0iOtGTmMrPnlX4qLXyc5+ll7A0BIj9WrbTg=="],
+    "arktype": ["arktype@2.2.5", "", { "dependencies": { "@ark/schema": "0.56.4", "@ark/util": "0.56.4", "arkregex": "0.0.10" } }, "sha512-c9oqY1eBab2LceqvpWX50xae2HB8P/nJPxRhuhPVf5lEDi3WQpf7WQflJFMsyCiA3NGh6zENOlse30gWBzlwDg=="],
 
     "ast-types": ["ast-types@0.13.4", "", { "dependencies": { "tslib": "^2.0.1" } }, "sha512-x1FCFnFifvYDDzTaLII71vG5uvDwgtmDTEVWAxrgeiR8VjMONcCXJx7E+USjDtHlwFmt9MysbqgF9b9Vjr6w+w=="],
 

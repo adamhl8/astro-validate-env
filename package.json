@@ -42,7 +42,7 @@
     "prepare": "just prepare"
   },
   "devDependencies": {
-    "@adamhl8/configs": "^2.8.0",
+    "@adamhl8/configs": "^2.8.1",
     "@arethetypeswrong/core": "^0.18.5",
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
