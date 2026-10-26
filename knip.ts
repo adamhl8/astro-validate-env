@@ -1,5 +1,5 @@
 import { knipConfig } from "@adamhl8/configs"
 
-const config = knipConfig({ ignore: ["src/__tests__/fixture/**"] })
+const config = knipConfig()
 
 export default config

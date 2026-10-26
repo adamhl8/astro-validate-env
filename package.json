@@ -39,28 +39,31 @@
     }
   },
   "scripts": {
-    "prepare": "just prepare"
+    "prepare": "bask prepare"
   },
   "devDependencies": {
-    "@adamhl8/configs": "^2.8.0",
+    "@adamhl8/bask": "^0.6.0",
+    "@adamhl8/configs": "^3.4.1",
     "@arethetypeswrong/core": "^0.18.5",
-    "@commitlint/cli": "^21.2.3",
-    "@commitlint/config-conventional": "^21.2.3",
-    "@types/bun": "^1.4.2",
-    "execa": "^10.0.1",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@types/bun": "^1.4.4",
     "get-port-please": "^3.2.0",
-    "knip": "^6.38.0",
+    "knip": "^6.43.0",
     "markdown-toc": "^1.2.0",
-    "oxfmt": "^0.70.0",
-    "oxlint": "^1.85.0",
-    "oxlint-tsgolint": "^7.0.2003",
-    "publint": "^0.3.24",
-    "release-it": "^21.1.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "oxlint-tsgolint": "^7.0.2005",
+    "publint": "^0.3.25",
+    "release-it": "^21.1.1",
     "release-it-git-cliff": "^0.2.0",
-    "tsdown": "^0.23.0",
-    "typescript": "^7.0.2"
+    "tsdown": "^0.23.2",
+    "typescript": "7.1.0-beta"
   },
   "peerDependencies": {
     "astro": "^7.0.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

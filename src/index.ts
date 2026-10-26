@@ -17,7 +17,7 @@ const aveVars = avefs.readFileSync(\`\${import.meta.dirname}/astro-validate-env.
 aveValidateEnv(JSON.parse(aveVars), "server", console)
 `.trim()
 
-// oxlint-disable-next-line import/no-default-export
+// oxlint-disable-next-line import/no-default-export - Astro integrations are consumed as a default import
 export default function integration(options?: Options): AstroIntegration {
   let serverEntry: string
   let serverDir: URL
@@ -28,7 +28,7 @@ export default function integration(options?: Options): AstroIntegration {
     name: "astro-validate-env",
     hooks: {
       "astro:config:setup": async ({ command, logger, isRestart, config }) => {
-        // oxlint-disable-next-line prefer-destructuring
+        // oxlint-disable-next-line prefer-destructuring - assigns to an outer `let`
         serverEntry = config.build.serverEntry
         serverDir = config.build.server
 

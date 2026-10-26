@@ -1,8 +1,8 @@
-import { afterAll, describe, expect, it, spyOn } from "bun:test"
+import { describe, expect, it, spyOn } from "bun:test"
 import fs from "node:fs/promises"
-import { tmpdir } from "node:os"
 import path from "node:path"
 
+import { makeTempDir } from "@adamhl8/configs/test"
 import type { AstroIntegration, AstroIntegrationLogger } from "astro"
 import bun from "bun"
 
@@ -12,18 +12,13 @@ import type { Options } from "#options.ts"
 import { optionsSchema } from "#options.ts"
 import { errorMessage, successMessage, validateEnv } from "#validator.ts"
 
+const SERVER_LOG_PREFIX = /^\d{2}:\d{2}:\d{2} \[astro-validate-env\] /v
+
 type Hooks = AstroIntegration["hooks"]
 type HookParams<T> = NonNullable<T> extends (...args: infer P) => unknown ? P[0] : never
 
 type Vars = NonNullable<Options["vars"]>
 const parseVars = (vars: Vars) => optionsSchema.parse({ vars }).vars
-
-const tempDirs: string[] = []
-const makeTempDir = async () => {
-  const dir = await fs.mkdtemp(path.join(tmpdir(), "ave-unit-"))
-  tempDirs.push(dir)
-  return dir
-}
 
 // A real capturing logger (not a mock) that records what was logged, cast to the astro logger shape.
 const createLogger = () => {
@@ -37,33 +32,33 @@ const createLogger = () => {
       errorLogs.push(message)
     },
   }
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - the logger implements only the methods under test
   const logger = capturingLogger as unknown as AstroIntegrationLogger
 
   return { logger, infoLogs, errorLogs }
 }
 
 const runConfigSetup = async (vars: Vars, command: "dev" | "build" | "preview" | "sync", isRestart = false) => {
-  const dir = await makeTempDir()
+  const dir = await makeTempDir("ave-unit-")
   const envDeclarationFilePath = path.join(dir, "env.d.ts")
   const { logger, infoLogs } = createLogger()
   const { hooks } = integration({ envDeclarationFilePath, vars })
   const config = { build: { serverEntry: "entry.mjs", server: new URL(`file://${dir}/`) } }
   const hook = hooks["astro:config:setup"]
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - the hooks only read part of their context
   await hook?.({ command, isRestart, config, logger } as unknown as HookParams<typeof hook>)
   return { dir, envDeclarationFilePath, infoLogs, hooks }
 }
 
 const runBuildSsr = async (hooks: Hooks) => {
   const hook = hooks["astro:build:ssr"]
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - the hooks only read part of their context
   await hook?.({} as unknown as HookParams<typeof hook>)
 }
 
 const runBuildDone = async (hooks: Hooks) => {
   const hook = hooks["astro:build:done"]
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion - the hooks only read part of their context
   await hook?.({ logger: createLogger().logger } as unknown as HookParams<typeof hook>)
 }
 
@@ -100,7 +95,7 @@ describe("validateEnv", () => {
     validateEnv(parseVars({ AVE_OK: {} }), "server", console)
 
     const logged = String(infoSpy.mock.calls[0]?.[0])
-    expect(logged).toMatch(/^\d{2}:\d{2}:\d{2} \[astro-validate-env\] /v)
+    expect(logged).toMatch(SERVER_LOG_PREFIX)
     expect(logged).toContain(successMessage)
   })
 
@@ -197,7 +192,7 @@ describe("validateEnv", () => {
 
 describe("generateEnvDeclaration", () => {
   it("writes required and optional keys and logs the output path", async () => {
-    const dir = await makeTempDir()
+    const dir = await makeTempDir("ave-unit-")
     const filePath = path.join(dir, "nested", "import.meta.env.d.ts")
     const { logger, infoLogs } = createLogger()
 
@@ -211,14 +206,6 @@ describe("generateEnvDeclaration", () => {
 })
 
 describe("integration", () => {
-  afterAll(async () => {
-    await Promise.all(
-      tempDirs.map(async (dir) => {
-        await fs.rm(dir, { recursive: true, force: true })
-      }),
-    )
-  })
-
   it("returns a named integration exposing the lifecycle hooks", () => {
     const { name, hooks } = integration()
     expect(name).toBe("astro-validate-env")
