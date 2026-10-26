@@ -1,3 +1,9 @@
+## [0.4.3](https://github.com/adamhl8/astro-validate-env/compare/v0.4.2..v0.4.3) - 2026-10-26
+
+### ⚙️ Miscellaneous Tasks
+
+- _(deps)_ update dependencies ([b7bbf5b](https://github.com/adamhl8/astro-validate-env/commit/b7bbf5bb1b6c0245b00c911d766b9f6b16b963b9) by @adamhl8)
+
 ## [0.4.2](https://github.com/adamhl8/astro-validate-env/compare/v0.4.1..v0.4.2) - 2026-09-24
 
 ### 🐛 Bug Fixes
